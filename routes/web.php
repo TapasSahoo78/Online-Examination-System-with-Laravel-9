@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,15 @@ Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::group(['middleware' => ['web', 'checkAdmin']], function () {
     Route::get('/admin/dashboard', [AuthController::class, 'adminDashboard']);
+
+    //Subject Route
+    Route::post('/add-subject', [AdminController::class, 'addSubject'])->name('addSubject');
+    Route::put('/edit-subject', [AdminController::class, 'editSubject'])->name('editSubject');
+    Route::delete('/delete-subject', [AdminController::class, 'deleteSubject'])->name('deleteSubject');
+
+    //Exam Route
+    Route::get('/admin/exam', [AdminController::class, 'examDashboard']);
+    Route::post('/admin/exam', [AdminController::class, 'addExam'])->name('addExam');
 });
 
 Route::group(['middleware' => ['web', 'checkStudent']], function () {
