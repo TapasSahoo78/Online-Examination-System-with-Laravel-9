@@ -43,7 +43,7 @@
             <div class="sidebar-collapse">
                 <ul class="nav" id="main-menu">
                     <li class="text-center">
-                        <img src="assets/img/find_user.png" class="user-image img-responsive" />
+                        <img src="{{ asset('assets/img/find_user.png') }}" class="user-image img-responsive" />
                     </li>
 
 
@@ -56,6 +56,9 @@
                     </li>
                     <li>
                         <a href="/admin/exam"><i class="fa fa-tasks fa-3x"></i>Exams</a>
+                    </li>
+                    <li>
+                        <a href="/admin/qna-ans"><i class="fa fa-question-circle fa-3x"></i>Q&A</a>
                     </li>
                     <li>
                         <a href="/logout"><i class="fa fa-sign-out fa-3x"></i>Logout</a>
