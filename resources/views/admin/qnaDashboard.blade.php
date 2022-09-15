@@ -30,11 +30,8 @@
                                         <th>#</th>
                                         <th>Question</th>
                                         <th>Answers</th>
-                                        <th>date</th>
-                                        {{-- <th>time</th>
-                                        <th>attempt</th>
                                         <th>Edit</th>
-                                        <th>Delete</th> --}}
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,6 +43,15 @@
                                                 <td>
                                                     <a href="#" class="ansButton" data-id="{{ $question->id }}"
                                                         data-toggle="modal" data-target="#showAnsModal">See Answers</a>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-info editButton" data-id="{{ $question->id }}"
+                                                        data-toggle="modal" data-target="#editQnaModal">Edit</button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-danger deleteButton"
+                                                        data-id="{{ $question->id }}" data-toggle="modal"
+                                                        data-target="#deleteQnaModal">Delete</button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -62,7 +68,7 @@
                 <!--  end  Context Classes  -->
                 {{-- </div> --}}
 
-                <!-- Add Exam Modal -->
+                <!-- Add Answer Modal -->
                 <div class="modal fade" id="addQnaModal" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -78,7 +84,7 @@
                             </div>
                             <form class="addQna">
                                 @csrf
-                                <div class="modal-body">
+                                <div class="modal-body addModalAnswers">
                                     <div class="row">
                                         <div class="col">
                                             <input type="text" name="question" placeholder="Enter Question"
@@ -128,6 +134,42 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Edit Answer Modal -->
+                <div class="modal fade" id="editQnaModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Update Q&A</h5>
+
+                                <button id="addEditAnswer" class="ml-5 btn btn-info">Update Answer</button>
+
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form class="editQna">
+                                @csrf
+                                <div class="modal-body editModalAnswers">
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="hidden" name="question_id" id="question_id">
+                                            <input type="text" name="question" id="question"
+                                                placeholder="Enter Question" class="w-100" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <span class="editerror" style="color: red;"></span>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update Q&A</button>
+                                </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+
 
                 <!-- /. ROW  -->
             </div>
@@ -180,7 +222,6 @@
                     }
                 });
 
-
                 //Add Answer
                 $("#addAnswer").click(function() {
                     if ($(".answers").length >= 6) {
@@ -199,7 +240,7 @@
                             <button class="btn btn-danger removeButton">Remove</button>
                         </div>
                     `;
-                        $(".modal-body").append(html);
+                        $(".addModalAnswers").append(html);
                     }
 
                 });
@@ -246,6 +287,98 @@
 
                     $(".showAnswers").html(html);
 
+                });
+
+                //Edit and Update Q&A
+                $("#addEditAnswer").click(function() {
+                    if ($(".editanswers").length >= 6) {
+                        $(".editerror").text("You can add maximum 6 answers.");
+                        setTimeout(() => {
+                            $(".editerror").text("");
+                        }, 2000);
+                    } else {
+                        var html = `
+                        <div class="row mt-2 editanswers">
+                            <input type="radio" name="is_correct" class="edit_is_correct">
+                            <div class="col">
+                                <input type="text" name="new_answers[]" placeholder="Enter Answers"
+                                    class="w-100" required>
+                            </div>
+                            <button class="btn btn-danger removeButton">Remove</button>
+                        </div>
+                    `;
+                        $(".editModalAnswers").append(html);
+                    }
+
+                });
+
+                $(".editButton").click(function() {
+                    var qid = $(this).attr('data-id');
+
+                    $.ajax({
+                        url: "{{ route('getQnaDetails') }}",
+                        type: "GET",
+                        data: {
+                            qid: qid
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            var qna = data.data[0];
+                            console.log(qna);
+                            $("#question_id").val(qid);
+                            $("#question").val(qna['question']);
+                            $(".editanswers").remove();
+                            var html = ``;
+                            for (let i = 0; i < qna['answers'].length; i++) {
+                                var checked = '';
+                                if (qna['answers'][i]['is_correct'] == 1) {
+                                    checked = 'checked';
+                                }
+                                html += `
+                                    <div class="row mt-2 editanswers">
+                                    <input type="radio" name="is_correct" class="edit_is_correct" ` + checked + `>
+                                    <div class="col">
+                                        <input type="text" name="answers[` + qna['answers']['id'] + `]" placeholder="Enter Answers"
+                                            class="w-100"
+                                value="` + qna['answers'][i]['answers'] + `" required>
+                                    </div>
+                                    <button class="btn btn-danger removeButton">Remove</button>
+                                    </div>
+                                `;
+                            }
+                            $(".editModalAnswers").append(html);
+                        }
+                    });
+                });
+
+                $(".editQna").submit(function(e) {
+                    e.preventDefault();
+                    if ($(".editanswers").length < 2) {
+                        $(".editerror").text("Please add minimum two answers.");
+                        setTimeout(() => {
+                            $(".editerror").text("");
+                        }, 2000);
+                    } else {
+                        var checkIsCorrect = false;
+                        for (let i = 0; i < $(".edit_is_correct").length; i++) {
+                            if ($(".edit_is_correct:eq(" + i + ")").prop('checked') == true) {
+                                checkIsCorrect = true;
+                                $(".edit_is_correct:eq(" + i + ")").val($(".edit_is_correct:eq(" + i + ")")
+                                    .next().find(
+                                        'input').val());
+                            }
+                        }
+
+                        if (checkIsCorrect) {
+
+                        } else {
+                            $(".editerror").text("Please select anyone correct answer.");
+                            setTimeout(() => {
+                                $(".editerror").text("");
+                            }, 2000);
+                        }
+
+                    }
                 });
 
             });

@@ -137,4 +137,10 @@ class AdminController extends Controller
             return response()->json(['success' => false, 'msg' => $th->getMessage()]);
         }
     }
+
+    public function getQnaDetails(Request $request)
+    {
+        $qna = Question::where('id', $request->qid)->with('answers')->get();
+        return response()->json(['data' => $qna]);
+    }
 }
