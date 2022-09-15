@@ -28,17 +28,32 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>exam_name</th>
-                                        <th>subject_id</th>
+                                        <th>Question</th>
+                                        <th>Answers</th>
                                         <th>date</th>
-                                        <th>time</th>
+                                        {{-- <th>time</th>
                                         <th>attempt</th>
                                         <th>Edit</th>
-                                        <th>Delete</th>
+                                        <th>Delete</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    @if (count($questions) > 0)
+                                        @foreach ($questions as $question)
+                                            <tr>
+                                                <td>{{ $question->id }}</td>
+                                                <td>{{ $question->question }}</td>
+                                                <td>
+                                                    <a href="#" class="ansButton" data-id="{{ $question->id }}"
+                                                        data-toggle="modal" data-target="#showAnsModal">See Answers</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="3">Questions and Answers not Found!</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -78,6 +93,39 @@
                                 </div>
                         </div>
                         </form>
+                    </div>
+                </div>
+
+                <!-- Show Answer Modal -->
+                <div class="modal fade" id="showAnsModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Show Answers</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table">
+                                    <thead>
+                                        <th>#</th>
+                                        <th>Answers</th>
+                                        <th> Is Correct</th>
+                                    </thead>
+                                    <tbody class="showAnswers">
+                                        <tr>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <span class="error" style="color: red;"></span>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -159,6 +207,47 @@
                 $(document).on("click", ".removeButton", function() {
                     $(this).parent().remove();
                 });
+
+                //Show Answers
+                $(".ansButton").click(function() {
+                    var questions = @json($questions);
+                    var qid = $(this).attr('data-id');
+
+                    //console.log(questions);
+                    //console.log(questions.length);
+
+                    var html = '';
+
+                    for (let i = 0; i < questions.length; i++) {
+
+                        if (questions[i]['id'] == qid) {
+                            //console.log(questions[i]);
+                            var answersLength = questions[i]['answers'].length;
+                            //console.log(answersLength);
+                            for (let j = 0; j < answersLength; j++) {
+                                let is_correct = 'No';
+                                //console.log(questions[i]['answers'][j]);
+                                if (questions[i]['answers'][j]['is_correct'] == 1) {
+                                    is_correct = 'Yes';
+                                }
+                                html += `
+                                    <tr>
+                                        <td>` + (j + 1) + `</td>
+                                        <td>` + questions[i]['answers'][j]['answers'] + `</td>
+                                        <td>` + is_correct + `</td>
+                                    </tr>
+                                `;
+
+                                //console.log(html);
+                            }
+                            break;
+                        }
+                    }
+
+                    $(".showAnswers").html(html);
+
+                });
+
             });
         </script>
     @endsection
