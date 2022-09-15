@@ -64,6 +64,8 @@ Route::group(['middleware' => ['web', 'checkAdmin']], function () {
     Route::get('/admin/qna-ans', [AdminController::class, 'qnaDashboard'])->name('qnaDashboard');
     Route::post('/add-qna-ans', [AdminController::class, 'addQna'])->name('addQna');
     Route::get('/get-qna-details', [AdminController::class, 'getQnaDetails'])->name('getQnaDetails');
+    Route::get('/delete-ans', [AdminController::class, 'deleteAns'])->name('deleteAns');
+
     Route::put('/edit-qna-ans', [AdminController::class, 'updateQna'])->name('updateQna');
 });
 

@@ -324,7 +324,7 @@
                         success: function(data) {
                             //console.log(data);
                             var qna = data.data[0];
-                            console.log(qna);
+                            //console.log(qna);
                             $("#question_id").val(qid);
                             $("#question").val(qna['question']);
                             $(".editanswers").remove();
@@ -338,11 +338,12 @@
                                     <div class="row mt-2 editanswers">
                                     <input type="radio" name="is_correct" class="edit_is_correct" ` + checked + `>
                                     <div class="col">
-                                        <input type="text" name="answers[` + qna['answers']['id'] + `]" placeholder="Enter Answers"
+                                        <input type="text" name="answers[` + qna['answers'][i]['id'] + `]" placeholder="Enter Answers"
                                             class="w-100"
                                 value="` + qna['answers'][i]['answers'] + `" required>
                                     </div>
-                                    <button class="btn btn-danger removeButton">Remove</button>
+                                    <button class="btn btn-danger removeButton removeAnswer" data-id="` + qna[
+                                    'answers'][i]['id'] + `">Remove</button>
                                     </div>
                                 `;
                             }
@@ -370,7 +371,20 @@
                         }
 
                         if (checkIsCorrect) {
-
+                            $.ajax({
+                                url: "{{ route('') }}",
+                                type: "GET",
+                                data: {
+                                    id: ansId
+                                },
+                                success: function(data) {
+                                    if (data.success == true) {
+                                        console.log(data.msg);
+                                    } else {
+                                        alert(data.msg);
+                                    }
+                                }
+                            });
                         } else {
                             $(".editerror").text("Please select anyone correct answer.");
                             setTimeout(() => {
@@ -379,6 +393,26 @@
                         }
 
                     }
+                });
+
+                //Remove Answers
+                $(document).on("click", ".removeAnswer", function() {
+                    var ansId = $(this).attr('data-id');
+
+                    $.ajax({
+                        url: "{{ route('deleteAns') }}",
+                        type: "GET",
+                        data: {
+                            id: ansId
+                        },
+                        success: function(data) {
+                            if (data.success == true) {
+                                console.log(data.msg);
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    });
                 });
 
             });

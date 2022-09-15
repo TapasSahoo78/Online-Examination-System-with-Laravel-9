@@ -143,4 +143,10 @@ class AdminController extends Controller
         $qna = Question::where('id', $request->qid)->with('answers')->get();
         return response()->json(['data' => $qna]);
     }
+
+    public function deleteAns(Request $request)
+    {
+        Answer::where('id', $request->id)->delete();
+        return response()->json(['success' => true, 'msg' => 'Answer Deleted Successfully']);
+    }
 }
