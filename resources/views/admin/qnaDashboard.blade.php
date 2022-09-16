@@ -10,6 +10,9 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQnaModal">
                         Add Q&A
                     </button>
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#importQnaModal">
+                        Import Q&A
+                    </button>
                 </div>
             </div>
             <!-- /. ROW  -->
@@ -36,9 +39,9 @@
                                 </thead>
                                 <tbody>
                                     @if (count($questions) > 0)
-                                        @foreach ($questions as $question)
+                                        @foreach ($questions as $key => $question)
                                             <tr>
-                                                <td>{{ $question->id }}</td>
+                                                <td>{{ $key + 1 }}</td>
                                                 <td>{{ $question->question }}</td>
                                                 <td>
                                                     <a href="#" class="ansButton" data-id="{{ $question->id }}"
@@ -190,6 +193,33 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <!-- Import Q&A Modal -->
+                <div class="modal fade" id="importQnaModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <form id="importQna" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Import Q&A</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="file" name="file" id="fileUpload" required
+                                        accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms.excel">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-info">Import</button>
                                 </div>
                             </div>
                         </form>
@@ -458,6 +488,37 @@
                         data: formData,
                         success: function(data) {
                             // console.log(data);
+                            if (data.success == true) {
+                                location.reload();
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    });
+                });
+
+                //Import Q&A
+                $("#importQna").submit(function(e) {
+                    e.preventDefault();
+
+                    let formData = new FormData();
+                    formData.append("file", fileUpload.files[
+                        0]); //from controller("file")|fileUpload.files[0] from input:file Id...
+
+                    $.ajaxSetup({
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('importQna') }}",
+                        method: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            console.log(data);
                             if (data.success == true) {
                                 location.reload();
                             } else {

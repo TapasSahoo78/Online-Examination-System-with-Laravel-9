@@ -1,0 +1,4 @@
+question,option_1,option_2,option_3,option_4,option_5,option_6,is_correct
+How can you make a bulleted list?,list tag,nl tag,ul tag,ol tag,,,ul tag
+Which of the following is an attribute of <Table> tag?,SRC,LINK,CELLPADDING,BOLD,None,IMG,CELLPADDING
+Opening tag of HTML is called,Ending tag,Starting tag,Closed tag,Pair tags,Table tag,,Starting tag

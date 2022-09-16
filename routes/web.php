@@ -67,6 +67,12 @@ Route::group(['middleware' => ['web', 'checkAdmin']], function () {
     Route::get('/delete-ans', [AdminController::class, 'deleteAns'])->name('deleteAns');
     Route::post('/update-qna-ans', [AdminController::class, 'updateQna'])->name('updateQna');
     Route::delete('/delete-qna', [AdminController::class, 'deleteQna'])->name('deleteQna');
+
+    //Import Q&A
+    Route::post('/import-qna-ans', [AdminController::class, 'importQna'])->name('importQna');
+
+    //Student Routes
+    Route::get('/admin/students', [AdminController::class, 'studentsDashboard']);
 });
 
 

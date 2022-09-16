@@ -7,8 +7,9 @@ use App\Models\Subject;
 use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Exam;
-use Mockery\Matcher\Subset;
-use PhpParser\Node\Stmt\TryCatch;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\QnaImport;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -197,5 +198,21 @@ class AdminController extends Controller
         Question::where('id', $request->qna_id)->delete();
         Answer::where('questions_id', $request->qna_id)->delete();
         return response()->json(['success' => true, 'msg' => 'Q&A Deleted Successfully']);
+    }
+
+    public function importQna(Request $request)
+    {
+        try {
+            Excel::import(new QnaImport, $request->file('file'));
+            return response()->json(['success' => true, 'msg' => 'Q&A Uploaded Successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'msg' => $e->getMessage()]);
+        }
+    }
+    /*************************** Student Dashboard ****************************/
+    public function studentsDashboard()
+    {
+        $students =User::where('is_admin',0)->get();
+        return view('admin.studentsDashboard',compact('students'));
     }
 }
