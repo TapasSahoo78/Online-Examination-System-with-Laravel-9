@@ -170,6 +170,31 @@
                     </div>
                 </div>
 
+                <!-- Delete Q&A Modal -->
+                <div class="modal fade" id="deleteQnaModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <form id="deleteQna">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Delete Q&A</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete Q&A?</p>
+                                    <input type="hidden" name="qna_id" id="delete_qna_id">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
                 <!-- /. ROW  -->
             </div>
@@ -371,15 +396,16 @@
                         }
 
                         if (checkIsCorrect) {
+                            var formData = $(this).serialize();
+                            //console.log(formData);
                             $.ajax({
-                                url: "{{ route('') }}",
-                                type: "GET",
-                                data: {
-                                    id: ansId
-                                },
+                                url: "{{ route('updateQna') }}",
+                                type: "POST",
+                                data: formData,
                                 success: function(data) {
+                                    console.log(data);
                                     if (data.success == true) {
-                                        console.log(data.msg);
+                                        location.reload();
                                     } else {
                                         alert(data.msg);
                                     }
@@ -408,6 +434,32 @@
                         success: function(data) {
                             if (data.success == true) {
                                 console.log(data.msg);
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    });
+                });
+
+                //Delete Q&A
+                $(".deleteButton").click(function() {
+                    var id = $(this).attr('data-id');
+                    $("#delete_qna_id").val(id);
+                });
+                $("#deleteQna").submit(function(e) {
+                    e.preventDefault();
+
+                    var formData = $(this).serialize();
+                    //console.log(formData);
+
+                    $.ajax({
+                        url: "{{ route('deleteQna') }}",
+                        method: "DELETE",
+                        data: formData,
+                        success: function(data) {
+                            // console.log(data);
+                            if (data.success == true) {
+                                location.reload();
                             } else {
                                 alert(data.msg);
                             }

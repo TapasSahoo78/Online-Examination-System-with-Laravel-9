@@ -149,4 +149,53 @@ class AdminController extends Controller
         Answer::where('id', $request->id)->delete();
         return response()->json(['success' => true, 'msg' => 'Answer Deleted Successfully']);
     }
+
+    public function updateQna(Request $request)
+    {
+        try {
+            Question::where('id', $request->question_id)->update([
+                'question' => $request->question
+            ]);
+            //Old Answers Update
+            if (isset($request->answers)) {
+                foreach ($request->answers as $key => $value) {
+                    $is_correct = 0;
+                    if ($request->is_correct == $value) {
+                        $is_correct = 1;
+                    }
+                    Answer::where('id', $key)->update([
+                        'questions_id' => $request->question_id,
+                        'answers' => $value,
+                        'is_correct' => $is_correct
+                    ]);
+                }
+            }
+
+            //New Answers Added
+            if (isset($request->new_answers)) {
+                foreach ($request->new_answers as $answer) {
+                    $is_correct = 0;
+                    if ($request->is_correct == $answer) {
+                        $is_correct = 1;
+                    }
+                    Answer::insert([
+                        'questions_id' => $request->question_id,
+                        'answers' => $answer,
+                        'is_correct' => $is_correct
+                    ]);
+                }
+            }
+
+            return response()->json(['success' => true, 'msg' => 'Q&A Updated Successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'msg' => $th->getMessage()]);
+        }
+    }
+
+    public function deleteQna(Request $request)
+    {
+        Question::where('id', $request->qna_id)->delete();
+        Answer::where('questions_id', $request->qna_id)->delete();
+        return response()->json(['success' => true, 'msg' => 'Q&A Deleted Successfully']);
+    }
 }
