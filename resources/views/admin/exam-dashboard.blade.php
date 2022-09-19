@@ -66,6 +66,7 @@
                                         <th>date</th>
                                         <th>time</th>
                                         <th>attempt</th>
+                                        <th>Add Questions</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
@@ -80,6 +81,10 @@
                                                 <td>{{ $exam->date }}</td>
                                                 <td>{{ $exam->time }} Hrs</td>
                                                 <td>{{ $exam->attempt }} Time</td>
+                                                <td>
+                                                    <a href="#" class="addQuestion" data-id="{{ $exam->id }}"
+                                                        data-toggle="modal" data-target="#addQnaModal">Add Question</a>
+                                                </td>
                                                 <td>
                                                     <button class="btn btn-info editButton" data-id="{{ $exam->id }}"
                                                         data-subject="" data-toggle="modal"
@@ -219,6 +224,43 @@
                     </div>
                 </div>
 
+                <!-- Add Answer Modal -->
+                <div class="modal fade" id="addQnaModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <form id="addQna">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Add Q&A</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="exam_id" id="addExamId">
+                                    <input type="search" name="search" placeholder="Search Here">
+                                    <br><br>
+                                    <table class="table">
+                                        <thead>
+                                            <th>Select</th>
+                                            <th>Question</th>
+                                        </thead>
+                                        <tbody class="addBody">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Add Q&A</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
                 <!-- /. ROW  -->
             </div>
             <!-- /. PAGE INNER  -->
@@ -320,6 +362,33 @@
                         }
                     });
                 });
+
+                //Add Question part
+                $(".addQuestion").click(function() {
+                    var id = $(this).attr('data-id');
+
+                    $('#addExamId').val(id);
+
+                    $.ajax({
+                        url: "{{ route('getQuestions') }}",
+                        method: "GET",
+                        data: {
+                            exam_id: id
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            if (data.success == true) {
+                                //location.reload();
+                                console.log(data);
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    });
+                });
+
+
+
             });
         </script>
 

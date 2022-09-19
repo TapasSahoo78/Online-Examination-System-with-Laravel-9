@@ -16,6 +16,16 @@
     <!-- GOOGLE FONTS-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+        input {
+            width: 100%;
+        }
+
+        select {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -116,7 +126,8 @@
     <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
-    <script src="{{ asset('assets/js/jquery-1.10.2.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/jquery-1.10.2.js') }}"></script> --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- BOOTSTRAP SCRIPTS -->
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <!-- METISMENU SCRIPTS -->
@@ -126,6 +137,7 @@
     <script src="{{ asset('assets/js/morris/morris.js') }}"></script>
     <!-- CUSTOM SCRIPTS -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/multiselect-dropdown.js') }}"></script> --}}
 
 
 </body>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 16, 2022 at 06:38 PM
+-- Generation Time: Sep 19, 2022 at 07:04 PM
 -- Server version: 8.0.30-0ubuntu0.22.04.1
 -- PHP Version: 8.0.22
 
@@ -80,7 +80,8 @@ CREATE TABLE `exams` (
 
 INSERT INTO `exams` (`id`, `exam_name`, `subject_id`, `date`, `time`, `attempt`, `created_at`, `updated_at`) VALUES
 (2, 'Test Exam22', 1, '2022-10-01', '22:06', 2, '2022-09-12 12:31:56', '2022-09-13 02:07:29'),
-(4, 'Test Exam33', 1, '2022-09-23', '17:07', 1, '2022-09-13 07:37:21', '2022-09-13 02:09:13');
+(4, 'Test Exam33', 1, '2022-09-23', '17:07', 1, '2022-09-13 07:37:21', '2022-09-13 02:09:13'),
+(5, 'Math', 1, '2022-09-20', '20:37', 1, '2022-09-19 13:07:27', '2022-09-19 13:07:27');
 
 -- --------------------------------------------------------
 
@@ -154,6 +155,20 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `qna_exams`
+--
+
+CREATE TABLE `qna_exams` (
+  `id` int NOT NULL,
+  `exam_id` int NOT NULL,
+  `question_id` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `questions`
 --
 
@@ -208,8 +223,8 @@ CREATE TABLE `users` (
   `is_admin` tinyint(1) NOT NULL DEFAULT '0',
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -218,7 +233,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `is_admin`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Tapas Sahoo', 'tapas@admin.com', NULL, 0, '$2y$10$9fdJD0zsJvxK7tx3Heum/egZ/E2Pgr5kH4s8T26C84XruRqCKiBYm', NULL, '2022-09-12 01:07:26', '2022-09-12 01:07:26'),
-(2, 'Admin', 'admin@gmail.com', NULL, 1, '$2y$10$5iAnQDBToD/sdpRNoinZGuTBkmD5aRO2/r9kRxfaYcC9gPltQ9x3m', NULL, '2022-09-12 01:07:46', '2022-09-12 01:07:46');
+(2, 'Admin', 'admin@gmail.com', NULL, 1, '$2y$10$5iAnQDBToD/sdpRNoinZGuTBkmD5aRO2/r9kRxfaYcC9gPltQ9x3m', NULL, '2022-09-12 01:07:46', '2022-09-12 01:07:46'),
+(5, 'Tapas Sahoo', 'admin22@gmail.com', NULL, 0, '$2y$10$4U867KNlc/5IkCG9kHRVpu88tMxyt0VZx78Aw67WhpBL0AUhRpaK2', NULL, NULL, NULL),
+(6, 'Tapas Sahoo', 'tapas@elphill.com', NULL, 0, '$2y$10$gv/kjdGgFos/V3Hn96ZRQ.c5WsHv1MalCCYmZ8WTEq01lEdqeNETO', NULL, NULL, '2022-09-19 03:49:32');
 
 --
 -- Indexes for dumped tables
@@ -264,6 +281,12 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
+-- Indexes for table `qna_exams`
+--
+ALTER TABLE `qna_exams`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `questions`
 --
 ALTER TABLE `questions`
@@ -296,7 +319,7 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT for table `exams`
 --
 ALTER TABLE `exams`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -317,6 +340,12 @@ ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `qna_exams`
+--
+ALTER TABLE `qna_exams`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
@@ -332,7 +361,7 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
