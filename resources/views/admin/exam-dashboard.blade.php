@@ -40,14 +40,13 @@
             <!-- /. ROW  -->
             <hr />
 
-
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addExamModal">
                 Add Exam
             </button>
 
 
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <!--    Context Classes  -->
                 <div class="panel panel-default">
 
@@ -67,6 +66,7 @@
                                         <th>time</th>
                                         <th>attempt</th>
                                         <th>Add Questions</th>
+                                        <th>Show Questions</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
@@ -84,6 +84,10 @@
                                                 <td>
                                                     <a href="#" class="addQuestion" data-id="{{ $exam->id }}"
                                                         data-toggle="modal" data-target="#addQnaModal">Add Question</a>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="seeQuestions" data-id="{{ $exam->id }}"
+                                                        data-toggle="modal" data-target="#seeQnaModal">See Question</a>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-info editButton" data-id="{{ $exam->id }}"
@@ -239,9 +243,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <input type="hidden" name="exam_id" id="addExamId">
-                                    <input type="search" name="search" placeholder="Search Here">
+                                    <input type="search" name="search" id="search" onkeyup="searchTable()"
+                                        placeholder="Search Here">
                                     <br><br>
-                                    <table class="table">
+                                    <table class="table" id="questionsTable">
                                         <thead>
                                             <th>Select</th>
                                             <th>Question</th>
@@ -257,6 +262,36 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                <!-- See Answer Modal -->
+                <div class="modal fade" id="seeQnaModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Questions</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table">
+                                    <thead>
+                                        <th>S.No</th>
+                                        <th>Question</th>
+                                    </thead>
+                                    <tbody class="seeQuestionTable">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add Q&A</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -379,7 +414,28 @@
                             //console.log(data);
                             if (data.success == true) {
                                 //location.reload();
-                                console.log(data);
+                                //console.log(data.data);
+                                var questions = data.data;
+                                var html = '';
+                                if (questions.length > 0) {
+                                    for (let i = 0; i < questions.length; i++) {
+                                        //console.log(questions[i]);
+                                        html += `
+                                    <tr>
+                                       <td><input type="checkbox" value="` + questions[i]['id'] + `" name="questions_ids[]"></td>
+                                       <td>` + questions[i]['question'] + `</td>
+                                    </tr>
+                                    `;
+                                    }
+
+                                } else {
+                                    html += `
+                                    <tr>
+                                       <td colspan="2" class="bg bg-info">Questions not Available!</td>
+                                    </tr>
+                                    `;
+                                }
+                                $('.addBody').html(html);
                             } else {
                                 alert(data.msg);
                             }
@@ -387,9 +443,118 @@
                     });
                 });
 
+                //Add Questions Post Section
+                $("#addQna").submit(function(e) {
+                    e.preventDefault();
 
+                    var formData = $(this).serialize();
+                    //console.log(formData);
+
+                    $.ajax({
+                        url: "{{ route('addQuestions') }}",
+                        method: "POST",
+                        data: formData,
+                        success: function(data) {
+                            //console.log(data);
+                            if (data.success == true) {
+                                location.reload();
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    });
+                });
+
+                //See Questions
+                $(".seeQuestions").click(function() {
+                    var id = $(this).attr('data-id');
+                    // console.log(id);
+
+                    $.ajax({
+                        url: "{{ route('getExamQuestions') }}",
+                        type: "GET",
+                        data: {
+                            exam_id: id
+                        },
+                        success: function(data) {
+                            // console.log(data);
+                            var html = '';
+                            var questions = data.data;
+                            if (questions.length > 0) {
+                                for (let i = 0; i < questions.length; i++) {
+                                    html += `
+                                        <tr>
+                                        <td>` + (i + 1) + `</td>
+                                        <td>` + questions[i]['questions'][0]['question'] + `</td>
+                                        <td>
+                                            <button class="btn btn-danger deleteQuestion" data-id="` + questions[i][
+                                        'id'
+                                    ] + `">Delete</button>
+                                        </td>
+                                        </tr>
+                                      `;
+
+                                }
+                            } else {
+                                html += `
+                                        <tr>
+                                        <td colspan="3" class="bg bg-info">Questions not Available!</td>
+                                        </tr>
+                                      `;
+                            }
+                            $(".seeQuestionTable").html(html);
+                        }
+                    });
+                });
+
+                //Delete Questions
+                $(document).on('click', '.deleteQuestion', function() {
+
+                    var id = $(this).attr('data-id');
+                    var obj = $(this);
+                    //console.log(obj);
+                    $.ajax({
+                        url: "{{ route('deleteExamQuestions') }}",
+                        type: "GET",
+                        data: {
+                            id: id
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            if (data.success == true) {
+                                obj.parent().parent().remove();
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    });
+                });
 
             });
+        </script>
+
+        <script>
+            function searchTable() {
+                var input, filters, table, tr, td, i, txtValue;
+                input = document.getElementById('search');
+                filters = input.value.toUpperCase();
+                table = document.getElementById('questionsTable');
+                tr = table.getElementsByTagName("tr");
+                //console.log(tr);
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+
+                        if (txtValue.toUpperCase().indexOf(filters) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+
+            }
         </script>
 
     @endsection
