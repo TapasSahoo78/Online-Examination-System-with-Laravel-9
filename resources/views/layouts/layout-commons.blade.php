@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OES Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OES</title>
     <!-- BOOTSTRAP STYLES-->
     <link href="{{ asset('assets/css/bootstrap.css') }}" rel="stylesheet" />
     <!-- FONTAWESOME STYLES-->
@@ -17,15 +18,6 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <style>
-        input {
-            width: 100%;
-        }
-
-        select {
-            width: 100%;
-        }
-    </style>
 </head>
 
 <body>
@@ -38,7 +30,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">OES ADMIN</a>
+                <a class="navbar-brand" href="index.html" style="background-color: blue !important;">OES STUDENT</a>
             </div>
             <div
                 style="color: white;
@@ -46,7 +38,8 @@
             float: right;
             font-size: 16px;">
                 Last access : 30 May
-                2014 &nbsp; <a href="/logout" class="btn btn-danger square-btn-adjust">Logout</a> </div>
+                2014 &nbsp; <a href="/logout" class="btn btn-danger square-btn-adjust"
+                    style="background-color: blue !important;">Logout</a> </div>
         </nav>
         <!-- /. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation">
@@ -58,25 +51,13 @@
 
 
                     <li>
-                        <a class="active-menu" href="/admin/dashboard"><i
+                        <a class="active-menu" href="/dashboard" style="background-color: blue !important;"><i
                                 class="fa fa-dashboard fa-3x"></i>Dashboard</a>
                     </li>
-                    <li>
-                        <a href="/admin/dashboard"><i class="fa fa-book fa-3x"></i>Subjects</a>
-                    </li>
-                    <li>
-                        <a href="/admin/exam"><i class="fa fa-tasks fa-3x"></i>Exams</a>
-                    </li>
-                    <li>
-                        <a href="/admin/qna-ans"><i class="fa fa-question-circle fa-3x"></i>Q&A</a>
-                    </li>
-                    <li>
-                        <a href="/admin/students"><i class="fa fa-tasks fa-3x"></i>Students</a>
-                    </li>
+
                     <li>
                         <a href="/logout"><i class="fa fa-sign-out fa-3x"></i>Logout</a>
                     </li>
-
 
                 </ul>
 

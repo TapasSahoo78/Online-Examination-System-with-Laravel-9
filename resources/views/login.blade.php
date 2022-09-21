@@ -24,4 +24,7 @@
     {{-- @if (Session::has('success'))
         <p style="color: green">{{ Session::get('success') }}</p>
     @endif --}}
+    <br>
+    <a href="/forget-password">Forget Password</a>
+
 @endsection
