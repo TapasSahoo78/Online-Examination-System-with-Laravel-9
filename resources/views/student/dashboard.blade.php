@@ -54,7 +54,7 @@
                                                 <td>{{ $exam->date }}</td>
                                                 <td>{{ $exam->time }} Hrs</td>
                                                 <td>{{ $exam->attempt }} Time</td>
-                                                <td>{{ 'null' }}</td>
+                                                <td>{{ $exam->attempt_counter }} Time</td>
                                                 <td>
                                                     <a href="#" data-code="{{ $exam->entrance_id }}" class="copy"><i
                                                             class="fa fa-copy"></i></a>
