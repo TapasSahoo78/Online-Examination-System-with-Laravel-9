@@ -18,6 +18,7 @@
                     @endphp
                     @if ($success == true)
                         @if (count($qna) > 0)
+                            {{-- <h4 class="text-right time">{{ $exam[0]['time'] }}</h4> --}}
                             {{-- Exam submit validation --}}
                             {{-- <form action="{{ route('examSubmit') }}" method="POST" class="mb-5"
                                 onsubmit="return isValid()"> --}}

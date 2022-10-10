@@ -48,6 +48,7 @@
                                         @endphp
                                         @foreach ($exams as $exam)
                                             <tr class="success">
+                                                <td style="display: none;">{{ $exam->id }}</td>
                                                 <td>{{ $count++ }}</td>
                                                 <td>{{ $exam->exam_name }}</td>
                                                 <td>{{ $exam->subjects[0]['subject'] }}</td>
