@@ -16,6 +16,7 @@
     <!-- GOOGLE FONTS-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
         input {
@@ -64,8 +65,8 @@
                     </li>
 
                     <li>
-                        <a class="active-menu" href="{{route('paidExamDashboard')}}" style="background-color: blue !important;"><i
-                                class="fa fa-task fa-3x"></i>Paid Exam</a>
+                        <a class="active-menu" href="{{ route('paidExamDashboard') }}"
+                            style="background-color: blue !important;"><i class="fa fa-task fa-3x"></i>Paid Exam</a>
                     </li>
 
                     <li>

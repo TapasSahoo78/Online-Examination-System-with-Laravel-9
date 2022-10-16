@@ -89,4 +89,8 @@ Route::group(['middleware' => ['web', 'checkStudent']], function () {
 
 
     Route::get('/paid-exams', [StudentController::class, 'paidExamDashboard'])->name('paidExamDashboard');
+
+    //Payment Route
+    Route::post('/payment-inr', [StudentController::class, 'paymentInr'])->name('paymentInr');
+    Route::get('/verify-payment', [StudentController::class, 'verifyPayment'])->name('verifyPayment');
 });
