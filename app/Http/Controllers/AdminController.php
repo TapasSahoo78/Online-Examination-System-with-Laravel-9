@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities\Price;
 
 class AdminController extends Controller
 {
@@ -63,6 +64,14 @@ class AdminController extends Controller
     public function addExam(Request $request)
     {
         try {
+
+            $plan = $request->plan;
+            $prices = null;
+
+            if (isset($request->inr) && isset($request->usd)) {
+                $prices = json_encode(['INR' => $request->inr, 'USD' => $request->usd]);
+            }
+
             $unique_id = uniqid('exid');
             Exam::insert([
                 'exam_name' => $request->exam_name,
@@ -70,8 +79,9 @@ class AdminController extends Controller
                 'date' => $request->date,
                 'time' => $request->time,
                 'attempt' => $request->attempt,
-                'entrance_id' => $unique_id
-
+                'entrance_id' => $unique_id,
+                'plan' => $plan,
+                'prices' => $prices
             ]);
             return response()->json(['success' => true, 'msg' => 'Exam added Successfully']);
         } catch (\Throwable $th) {
@@ -92,12 +102,21 @@ class AdminController extends Controller
     public function updateExam(Request $request)
     {
         try {
+            $plan = $request->plan;
+            $prices = null;
+
+            if (isset($request->inr) && isset($request->usd)) {
+                $prices = json_encode(['INR' => $request->inr, 'USD' => $request->usd]);
+            }
+
             $exam = Exam::find($request->exam_id);
             $exam->exam_name = $request->exam_name;
             $exam->subject_id = $request->subject_id;
             $exam->date = $request->date;
             $exam->time = $request->time;
             $exam->attempt = $request->attempt;
+            $exam->plan = $plan;
+            $exam->prices = $prices;
             $exam->save();
             return response()->json(['success' => true, 'msg' => 'Exam updated Successfully']);
         } catch (\Throwable $th) {
@@ -178,6 +197,14 @@ class AdminController extends Controller
                     ]);
                 }
             }
+
+            // if (isset($request->is_correct)) {
+            //         if ($request->is_correct == $key) {
+            //             $is_correct = 1;
+            //         } else {
+            //             $is_correct = 0;
+            //         }
+            //     }
 
             //New Answers Added
             if (isset($request->new_answers)) {

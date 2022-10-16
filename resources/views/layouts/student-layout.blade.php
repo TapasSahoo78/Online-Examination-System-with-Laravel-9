@@ -64,6 +64,11 @@
                     </li>
 
                     <li>
+                        <a class="active-menu" href="{{route('paidExamDashboard')}}" style="background-color: blue !important;"><i
+                                class="fa fa-task fa-3x"></i>Paid Exam</a>
+                    </li>
+
+                    <li>
                         <a href="/logout"><i class="fa fa-sign-out fa-3x"></i>Logout</a>
                     </li>
 

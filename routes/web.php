@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ExamController;
-
+use App\Http\Controllers\StudentController;
 
 Route::get('/clear-cache', function () {
     Artisan::call('optimize:clear');
@@ -86,4 +86,7 @@ Route::group(['middleware' => ['web', 'checkStudent']], function () {
     Route::get('/exam/{id}', [ExamController::class, 'loadExamDashboard']);
 
     Route::post('/exam-submit', [ExamController::class, 'examSubmit'])->name('examSubmit');
+
+
+    Route::get('/paid-exams', [StudentController::class, 'paidExamDashboard'])->name('paidExamDashboard');
 });
